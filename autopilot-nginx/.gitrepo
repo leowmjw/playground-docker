@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/autopilotpattern/nginx
+	branch = master
+	commit = 975f62c141067a2f97f31d77832a79e7952686c4
+	parent = 4bb68628d621562bb3387a8c7fe9aec724816389
+	cmdver = 0.3.0
