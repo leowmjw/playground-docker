@@ -3,7 +3,7 @@ version: '2'
 services:
 
     prod:
-      image: forum:${TAG}
+      image: leowmjw/forum:${TAG}
       build:
         context: ./app-server
         args:
@@ -29,15 +29,19 @@ services:
 ### Caddy Server Container ##################################
 
     caddy:
-      build: ./caddy
+      image: leowmjw/caddy:${TAG}
+      build: 
+        context: ./app-server
+        dockerfile: "caddy/Dockerfile"
       ports:
         - "8080:80"
         - "8443:443"
-      volumes:
-        - ./caddy/Caddyfile:/etc/Caddyfile
-        - ./logs/caddy:/var/log/caddy
-        - caddy:/root/.caddy
-        - ./app-server/Code/public:/var/www/public
+        - "2015:2015"
+      # volumes:
+      #  - ./caddy/Caddyfile:/etc/Caddyfile
+      #  - ./logs/caddy:/var/log/caddy
+      #  - caddy:/root/.caddy
+      #  - ./app-server/Code/public:/var/www/public
       depends_on:
         - prod
       networks:
