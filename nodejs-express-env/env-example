@@ -1,0 +1,6 @@
+DB_TYPE=postgresql
+DB_HOST=data-postgresql.service.consul
+DB_USER=laravel
+DB_NAME=laravel
+DB_PASSWORD=SUPER$3c357passw0rd
+
