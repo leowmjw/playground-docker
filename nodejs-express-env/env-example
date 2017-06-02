@@ -1,0 +1,6 @@
+DB_TYPE=mysql
+DB_HOST=data-mysql.service.consul
+DB_USER=laravel
+DB_NAME=laravel
+DB_PASSWORD=passw0rd
+
