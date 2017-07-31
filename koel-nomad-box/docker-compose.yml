@@ -1,0 +1,80 @@
+version: '2'
+
+services:
+
+    prod:
+      image: leowmjw/koel-app:${TAG}
+      build:
+        context: ./app-server
+        args:
+          - INSTALL_XDEBUG=${PHP_FPM_INSTALL_XDEBUG}
+          - INSTALL_BLACKFIRE=${INSTALL_BLACKFIRE}
+          - INSTALL_SOAP=${PHP_FPM_INSTALL_SOAP}
+          - INSTALL_MONGO=${PHP_FPM_INSTALL_MONGO}
+          - INSTALL_ZIP_ARCHIVE=${PHP_FPM_INSTALL_ZIP_ARCHIVE}
+          - INSTALL_BCMATH=${PHP_FPM_INSTALL_BCMATH}
+          - INSTALL_PHPREDIS=${PHP_FPM_INSTALL_PHPREDIS}
+          - INSTALL_MEMCACHED=${PHP_FPM_INSTALL_MEMCACHED}
+          - INSTALL_OPCACHE=${PHP_FPM_INSTALL_OPCACHE}
+          - INSTALL_EXIF=${PHP_FPM_INSTALL_EXIF}
+          - INSTALL_AEROSPIKE_EXTENSION=${PHP_FPM_INSTALL_AEROSPIKE_EXTENSION}
+          - INSTALL_MYSQLI=${PHP_FPM_INSTALL_MYSQLI}
+          - INSTALL_TOKENIZER=${PHP_FPM_INSTALL_TOKENIZER}
+          - INSTALL_INTL=${PHP_FPM_INSTALL_INTL}
+        dockerfile: "php-fpm/Dockerfile-${PHP_VERSION}"
+      networks:
+        - backend
+
+
+### Caddy Server Container ##################################
+
+    caddy:
+      image: leowmjw/koel-caddy:${TAG}
+      build: 
+        context: ./app-server
+        dockerfile: "caddy/Dockerfile"
+      ports:
+        - "8080:80"
+        - "8443:443"
+        - "2015:2015"
+      # volumes:
+      #  - ./caddy/Caddyfile:/etc/Caddyfile
+      #  - ./logs/caddy:/var/log/caddy
+      #  - caddy:/root/.caddy
+      #  - ./app-server/Code/public:/var/www/public
+      depends_on:
+        - prod
+      networks:
+        - frontend
+        - backend
+
+### MySQL Container #########################################
+
+    mysql:
+      build:        
+        context: ./mysql
+      environment:
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      volumes:
+        - ${DATA_SAVE_PATH}/mysql:/var/lib/mysql
+      ports:
+        - "${MYSQL_PORT}:3306"
+      networks:
+        - backend
+
+### Networks Setup ############################################
+
+networks:
+  frontend:
+    driver: "bridge"
+  backend:
+    driver: "bridge"
+
+### Volume Setup #######
+
+volumes:
+  caddy:
+    driver: "local"                                                                    
